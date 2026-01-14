@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: P2P Wallet Core
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 10
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref P2PTable
+
+  Api:
+    Auth:
+      DefaultAuthorizer: CognitoAuthorizer
+      Authorizers:
+        CognitoAuthorizer:
+          UserPoolArn: arn:aws:cognito-idp:REGION:ACCOUNT_ID:userpool/USER_POOL_ID
+
+Resources:
+
+  P2PTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: P2PWalletCore
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+
+  TransferFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: transfer.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref P2PTable
+      Events:
+        TransferApi:
+          Type: Api
+          Properties:
+            Path: /transfer
+            Method: post
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: es2022
+        Format: cjs
+        EntryPoints:
+          - src/infrastructure/handlers/transfer.ts
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/transfer"
