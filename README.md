@@ -68,7 +68,7 @@ Esto es extremadamente eficiente y barato (Read Capacity Units).
 
 ## Requisitos:
 AWS SAM (sam build y sam deploy guided), instalar dependencias de package.json , y npm install -g esbuild 
-
+Para un correcto despliegue editar el archivo template.yaml en la linea UserPoolArn: arn:aws:cognito-idp:REGION:ACCOUNT_ID:userpool/USER_POOL_ID  (reemplazarla por el arn del Cognito de su cuenta)
 
 ## Pregunta 1: Autenticación: Asume que usamos Amazon Cognito. ¿Cómo validarías dentro de la Lambda que el usuario que invoca la API es realmente el dueño de la billetera desde la que sale el dinero? (Evitar Insecure Direct Object References - IDOR)
 
