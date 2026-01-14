@@ -7,7 +7,7 @@ Transferencia de dinero entre dos usuarios de la Wallet.
 ## Arquitectura
 - **Compute:** AWS Lambda (Node.js 20.x).
 - **Database:** Amazon DynamoDB (Single Table Design).
-- **Patrón de diseño:** Arquitectura Hexagonal
+- **Patrón de diseño:** Arquitectura Hexagonal minificada
 - **Security:** AWS Cognito 
 
 ## Decisiones Técnicas Clave
